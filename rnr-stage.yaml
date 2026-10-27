@@ -1,3 +1,4 @@
+yaml_version: 1
 stage: fetch
 modules:
   adder: {source_files: [adder.sv]}
