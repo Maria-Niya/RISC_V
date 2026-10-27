@@ -1,0 +1,4 @@
+stage: fetch
+modules:
+  adder: {source_files: [adder.sv]}
+  mux2: {source_files: [mux2.sv]}
