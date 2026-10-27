@@ -6,3 +6,7 @@ modules:
   imem: {source_files:[imem.sv]}
   flopr: {source_files: [flopr.sv]}
   flopenr: {source_files:[flopenr.sv]}
+#stage: decode_control
+#modules:
+ # maindec: {source_files:[maindec.sv]}
+ #  aludec: {source_files:[ALUdec.sv]}
