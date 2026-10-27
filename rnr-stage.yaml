@@ -2,3 +2,6 @@ stage: fetch
 modules:
   adder: {source_files: [adder.sv]}
   mux2: {source_files: [mux2.sv]}
+  imem: {source_files:[imem.sv]}
+  flopr: {source_files: [flopr.sv]}
+  flopenr: {source_files:[flopenr.sv]}
