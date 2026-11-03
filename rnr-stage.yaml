@@ -1,12 +1,14 @@
 yaml_version: 1
-stage: fetch
+stage: execute
 modules:
   adder: {source_files: [adder.sv]}
   mux2: {source_files: [mux2.sv]}
   imem: {source_files:[imem.sv]}
   flopr: {source_files: [flopr.sv]}
   flopenr: {source_files:[flopenr.sv]}
-#stage: decode_control
-#modules:
- # maindec: {source_files:[maindec.sv]}
- #  aludec: {source_files:[ALUdec.sv]}
+  if_stage: {source_files: [if_stage.sv]}
+  id_stage: {source_files:[id_stage.sv]}
+  ex_stage: {source_files: [ex_stage.sv]}
+  alu: {source_files:[alu.sv]}
+  
+
