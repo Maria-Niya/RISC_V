@@ -10,7 +10,7 @@ module ex_stage(
     input logic mux_inp,
     input logic [2:0] fn3,
     input logic [6:0] imm11_5,
-    input logic [4:0] aluop,
+    input logic [2:0] aluop,
     input logic [6:0] opcode,
     output logic and_out_ex,
     output logic [31:0] alu_out,
@@ -19,6 +19,7 @@ module ex_stage(
 
     logic [31:0] src_b;
     logic [31:0] pc_signed_offset;
+    logic [4:0] alu_control_out;
     logic zero;
 
     mux2 #(.WIDTH(32)) alu_mux(
@@ -28,8 +29,16 @@ module ex_stage(
         .y(src_b)
     );
 
+    alu_control control_unit(
+        .alu_op(aluop),
+        .fn3(fn3),
+        .imm11_5(imm11_5),
+        .fn7_5(fn7_5),
+        .control_out(alu_control_out)
+    );
+
     alu alu_unit(
-        .alu_control(aluop),
+        .alu_control(alu_control_out),
         .rs1_data(rs1_data),
         .rs2_data(src_b),
         .alu_out(alu_out),
