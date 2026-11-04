@@ -1,10 +1,7 @@
 yaml_version: 1
 stage: execute
 modules:
-
-  if_stage: {source_files: [if_stage.sv]}
-  id_stage: {source_files: [id_stage.sv]}
-  ex_stage: {source_files: [ex_stage.sv]}
+  if_stage: {source_files: [adder.sv, mux2.sv, if_stage.sv]}
+  id_stage: {source_files: [regfile.sv, extend.sv, maindec.sv, id_stage.sv]}
+  ex_stage: {source_files: [alu_control.sv, alu.sv, adder.sv, mux2.sv, ex_stage.sv]}
   alu: {source_files: [alu.sv]}
-  
-
