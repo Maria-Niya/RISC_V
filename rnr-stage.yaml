@@ -3,8 +3,8 @@ stage: execute
 modules:
 
   if_stage: {source_files: [if_stage.sv]}
-  id_stage: {source_files:[id_stage.sv]}
+  id_stage: {source_files: [id_stage.sv]}
   ex_stage: {source_files: [ex_stage.sv]}
-  alu: {source_files:[alu.sv]}
+  alu: {source_files: [alu.sv]}
   
 
