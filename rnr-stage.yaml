@@ -1,5 +1,5 @@
 yaml_version: 1
-stage: decode
+stage: execute
 modules:
   if_stage: {source_files: [adder.sv, mux2.sv, if_stage.sv]}
   decoder: {source_files: [decoder.sv]}
@@ -7,3 +7,4 @@ modules:
   register_file: {source_files: [register_file.sv]}
   main_control: {source_files: [main_control.sv]}
   id_stage: {source_files: [decoder.sv, imm_generator.sv, register_file.sv, main_control.sv, id_stage.sv]}
+  ex_stage: {source_files: [adder.sv, mux2.sv, alu.sv, alu_control.sv, ex_stage.sv]}
