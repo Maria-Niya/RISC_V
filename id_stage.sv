@@ -1,4 +1,3 @@
-
 module id_stage(
     input logic clk,
     input logic reset,
@@ -21,52 +20,60 @@ module id_stage(
     output logic mux_inp
 );
 
-    logic [4:0] rs1, rs2, rd;
-    logic [1:0] immsrc;
-    logic [1:0] ALUOp;
-    logic [1:0] ResultSrc;
-    logic RegWrite, Jump;
+    logic [4:0] rs1;
+    logic [4:0] rs2;
+    logic [4:0] rd;
+    logic [11:0] imm;
+    logic [19:0] imm_uj;
+    logic [2:0] fn3;
+    logic [6:0] opcode;
+    logic reg_write;
 
-    assign opcode_out_d = instruction[6:0];
-    assign rd = instruction[11:7];
-    assign fn3_out_d = instruction[14:12];
-    assign rs1 = instruction[19:15];
-    assign rs2 = instruction[24:20];
-    assign imm11_5 = instruction[31:25];
-    assign fn7_5 = instruction[30];
-
-    maindec md(
-        .op(opcode_out_d),
-        .ResultSrc(ResultSrc),
-        .MemWrite(mem_write),
-        .Branch(branch),
-        .ALUSrc(alu_src),
-        .RegWrite(RegWrite),
-        .Jump(Jump),
-        .ImmSrc(immsrc),
-        .ALUOp(ALUOp)
+    decoder instruction_decoder(
+        .instruction(instruction),
+        .rs1(rs1),
+        .rs2(rs2),
+        .rd(rd),
+        .opcode(opcode),
+        .imm11_5(imm11_5),
+        .fn3(fn3),
+        .imm(imm),
+        .imm_uj(imm_uj),
+        .fn7_5(fn7_5)
     );
 
-    extend ext(
-        .instr(instruction[31:7]),
-        .immsrc(immsrc),
-        .immext(imm_out)
+    imm_generator imm_gen(
+        .imm_input(imm),
+        .fn3(fn3),
+        .opcode(opcode),
+        .imm_input_uj(imm_uj),
+        .imm_output(imm_out)
     );
 
-    regfile rf(
+    register_file rf(
+        .rs1_sel(rs1),
+        .rs2_sel(rs2),
+        .reg_write(reg_write && !stall),
         .clk(clk),
-        .we3(RegWrite && !stall),
-        .a1(rs1),
-        .a2(rs2),
-        .a3(rd),
-        .wd3(wb_data),
-        .rd1(rs1_data),
-        .rd2(rs2_data)
+        .reset(reset),
+        .wb_data(wb_data),
+        .rd_sel(rd),
+        .rs1_data(rs1_data),
+        .rs2_data(rs2_data)
     );
 
-    assign aluop = {1'b0, ALUOp};
-    assign memtoreg = ResultSrc;
-    assign mem_read = (opcode_out_d == 7'b0000011);
-    assign mux_inp = 1'b0;
-
+    main_control control_unit(
+        .opcode(opcode),
+        .fn3(fn3),
+        .memtoreg(memtoreg),
+        .branch(branch),
+        .mux_inp(mux_inp),
+        .memread(mem_read),
+        .memwrite(mem_write),
+        .alusrc(alu_src),
+        .reg_write(reg_write),
+        .aluop(aluop)
+    );
+    assign opcode_out_d = opcode;
+    assign fn3_out_d = fn3;
 endmodule
