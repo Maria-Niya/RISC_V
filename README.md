@@ -7,19 +7,21 @@
 
 **A modular SystemVerilog implementation of the RISC-V instruction pipeline.**
 
-This repository contains the building blocks of a 32-bit RISC-V processor and is currently organized around instruction fetch, decode, and execute stages. The implementation uses parameterized RTL modules, control decoding, register-file access, immediate generation, arithmetic operations, branch evaluation, and PC control.
+This repository contains the building blocks of a 32-bit RISC-V processor and is currently organized around instruction fetch, decode, execute, memory/writeback, and control stages. The implementation uses parameterized RTL modules, control decoding, register-file access, immediate generation, arithmetic operations, branch evaluation, PC control, memory operations, and writeback selection.
 
-> This is an active development repository. A complete processor top-level, instruction/data memories, and a comprehensive test suite may not yet be included.
+> This is an active development repository. A complete processor top-level and a comprehensive test suite may not yet be included.
 
 ## Current Features
 
 - 32-bit RV32-style datapath modules
-- Separate instruction fetch, decode, and execute stages
+- Separate instruction fetch, decode, execute, and writeback stages
 - 32-entry register file with register `x0` hardwired to zero
 - Main control decoding for R-type, I-type, load/store, branch, jump, LUI, and AUIPC instructions
 - ALU control for arithmetic, logical, shift, comparison, and branch operations
 - Immediate generation for I, S, B, J, LUI, and AUIPC formats
 - PC incrementing and branch/jump target selection
+- Memory read/write control and memory-to-register selection
+- Writeback multiplexing for ALU results, memory data, jumps, LUI, and AUIPC
 - Active-high asynchronous reset
 - Xilinx Vivado-compatible SystemVerilog sources
 
@@ -44,8 +46,12 @@ This repository contains the building blocks of a 32-bit RISC-V processor and is
 +----------------+
         |
         v
-  Memory / Writeback
-  (Integration in progress)
+|  Memory       |  Load/store control and memory data interface
++----------------+
+        |
+        v
+|  WB Stage     |  Select data for the register file
++----------------+
 ```
 
 The module hierarchy is:
@@ -55,6 +61,7 @@ The module hierarchy is:
 | [`if_stage.sv`](if_stage.sv) | Maintains the PC and selects sequential or branch/jump targets |
 | [`id_stage.sv`](id_stage.sv) | Decodes instructions and coordinates register/control/immediate logic |
 | [`ex_stage.sv`](ex_stage.sv) | Performs ALU operations and target-address calculations |
+| [`wb_stage.sv`](wb_stage.sv) | Selects ALU, memory, jump return-address, or upper-immediate data for writeback |
 | [`decoder.sv`](decoder.sv) | Extracts register fields, opcodes, function fields, and immediate fields |
 | [`main_control.sv`](main_control.sv) | Generates datapath and memory-control signals |
 | [`alu_control.sv`](alu_control.sv) | Selects the ALU operation |
@@ -107,6 +114,7 @@ The exact supported instruction subset depends on which source modules are integ
    - The `if_stage` module requires `adder.sv`, `mux2.sv`, and `if_stage.sv`.
    - The `id_stage` module requires decoder, immediate-generator, register-file, control, and stage sources.
    - The `ex_stage` module requires adder, multiplexer, ALU, ALU-control, and stage sources.
+   - The `wb_stage` module requires memory data, ALU data, return addresses, immediate data, and writeback-control inputs.
 5. Add a test bench and set the desired top-level module.
 6. Run behavioral simulation and inspect results in the Vivado waveform viewer.
 
@@ -121,6 +129,7 @@ iverilog -g2012 \
 ```
 
 The same compilation pattern is used for the fetch and decode stages, but a test bench must be supplied to instantiate a module and generate stimulus.
+The writeback stage can be compiled independently with `wb_stage.sv`.
 
 ## Repository Layout
 
@@ -129,6 +138,7 @@ RISC_V/
 |-- if_stage.sv         # Program counter and instruction-fetch stage
 |-- id_stage.sv         # Decode stage integration
 |-- ex_stage.sv         # Execute stage integration
+|-- wb_stage.sv         # Memory/ALU/upper-immediate writeback selection
 |-- decoder.sv          # Instruction field decoding
 |-- main_control.sv     # Main instruction control
 |-- alu_control.sv      # ALU operation decoding
@@ -141,9 +151,9 @@ RISC_V/
 
 ## Development Roadmap
 
-- Add complete instruction/data memory modules
-- Integrate a processor top-level module
-- Implement and verify writeback and memory stages
+- Integrate a complete processor top-level module
+- Add or integrate the instruction/data memory implementation
+- Verify memory and writeback behavior with directed test benches
 - Add a reusable program loader and test instruction programs
 - Create directed SystemVerilog test benches
 - Expand verification to instruction-set compliance and edge cases
