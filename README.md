@@ -149,15 +149,6 @@ RISC_V/
 - Expand verification to instruction-set compliance and edge cases
 - Add synthesis constraints and optional FPGA demo support
 
-## Contributing
-
-Contributions should preserve the existing modular structure and include simulation evidence.
-
-1. Fork the repository.
-2. Create a focused branch.
-3. Update the relevant RTL and test bench together.
-4. Verify reset behavior, instruction decoding, datapath outputs, and branch decisions.
-5. Open a pull request describing the design change and test coverage.
 
 ## Author
 
