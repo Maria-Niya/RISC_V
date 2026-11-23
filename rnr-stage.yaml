@@ -8,3 +8,5 @@ modules:
   main_control: {source_files: [main_control.sv]}
   id_stage: {source_files: [decoder.sv, imm_generator.sv, register_file.sv, main_control.sv, id_stage.sv]}
   ex_stage: {source_files: [adder.sv, mux2.sv, alu.sv, alu_control.sv, ex_stage.sv]}
+  wb_stage: {source_files: [wb_stage.sv]}
+  single_cycle_riscv: {source_files: [adder.sv, mux2.sv, alu.sv, alu_control.sv, decoder.sv, imm_generator.sv, register_file.sv, main_control.sv, if_stage.sv, id_stage.sv, ex_stage.sv, wb_stage.sv, single_cycle_riscv.sv]}
