@@ -1,5 +1,5 @@
 yaml_version: 1
-stage: execute
+stage: integration
 modules:
   if_stage: {source_files: [adder.sv, mux2.sv, if_stage.sv]}
   decoder: {source_files: [decoder.sv]}
