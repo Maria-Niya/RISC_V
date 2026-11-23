@@ -98,38 +98,6 @@ Implemented ALU operations include:
 
 The exact supported instruction subset depends on which source modules are integrated and should be expanded and validated through a complete test program.
 
-## Getting Started
-
-### Vivado Simulation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Maria-Niya/RISC_V.git
-   cd RISC_V
-   ```
-
-2. Create a new RTL project in Xilinx Vivado.
-3. Add the required SystemVerilog source files.
-4. Use [`rnr-stage.yaml`](rnr-stage.yaml) as a module dependency reference:
-   - The `if_stage` module requires `adder.sv`, `mux2.sv`, and `if_stage.sv`.
-   - The `id_stage` module requires decoder, immediate-generator, register-file, control, and stage sources.
-   - The `ex_stage` module requires adder, multiplexer, ALU, ALU-control, and stage sources.
-   - The `wb_stage` module requires memory data, ALU data, return addresses, immediate data, and writeback-control inputs.
-5. Add a test bench and set the desired top-level module.
-6. Run behavioral simulation and inspect results in the Vivado waveform viewer.
-
-### Icarus Verilog Example
-
-The stage modules can be checked with Icarus Verilog by compiling the required dependency set. For example:
-
-```bash
-iverilog -g2012 \
-  adder.sv mux2.sv alu.sv alu_control.sv ex_stage.sv \
-  -o ex_stage_sim
-```
-
-The same compilation pattern is used for the fetch and decode stages, but a test bench must be supplied to instantiate a module and generate stimulus.
-The writeback stage can be compiled independently with `wb_stage.sv`.
 
 ## Repository Layout
 
@@ -148,16 +116,6 @@ RISC_V/
 |-- rnr-stage.yaml      # Stage module dependency manifest
 `-- supporting modules  # Multiplexer, adder, resettable registers, and extension logic
 ```
-
-## Development Roadmap
-
-- Integrate a complete processor top-level module
-- Add or integrate the instruction/data memory implementation
-- Verify memory and writeback behavior with directed test benches
-- Add a reusable program loader and test instruction programs
-- Create directed SystemVerilog test benches
-- Expand verification to instruction-set compliance and edge cases
-- Add synthesis constraints and optional FPGA demo support
 
 
 ## Author
